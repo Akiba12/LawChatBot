@@ -16,22 +16,11 @@ var answers = {
   partyType1 : ["Receiving", "receiving", "R", "r"],
   partyType2 : ["Sharing", "sharing", "S", "s"],
   // ---------------------------------------- //
-  purpose1 : ["Yes", "yes", "Y", "y"],
-  purpose2 : ["No", "no", "N", "n"],
-  // ---------------------------------------- //
-  lenght1 : ["No", "no", "N", "n"],
-  length2 : ["Yes", "yes", "Y", "y"]
-  // ---------------------------------------- //
-  jurisdiction1 : ["No", "no", "N", "n"],
-  jurisdiction2 : ["Yes", "yes", "Y", "y"],
-  jurPart1 : ["No", "no", "N", "n"],
-  jurPart2 : ["Yes", "yes", "Y", "y"],
+  yes : ["Yes", "yes", "Y", "y"],
+  no : ["No", "no", "N", "n"],
   // ---------------------------------------- //
   startDate1 : ["Signature", "signature", "On signature", "on signature"],
   startDate2 : ["Another date", "another date", "Another", "another"]
-  // ---------------------------------------- //
-  varification1 : ["Yes", "yes", "Y", "y"],
-  varification2 : ["No", "no", "N", "n"]
 
 };
 
@@ -72,28 +61,36 @@ var getPurpose = function (res) {
 
 // Q3
 var getDocLength = function(res) {
-  if (answers.lenght1.includes(res)) {
+  if (answers.no.includes(res)) {
     lenght = "Indefinite"
-  } else if (answers.length2.includes(res)) {
-    lenght = res
+  } else if (answers.yes.includes(res)) {
+    return "How long should the confidentiality obligations last for here?"
+    exactLength(len)
   } else{
     console.log("You entered wrong answer.");
   }
 }
 
+var exactLength = function (len) {
+  lenght = len
+}
+
 // Q4
 var getJurisdiction = function (res) {
-  if (answers.jurisdiction1.includes(res)) {
+  if (answers.no.includes(res)) {
     jurisdiction = "South African law"
-  } else if (answers.jurisdiction2.includes(res)) {
-    jurPart();
+  } else if (answers.yes.includes(res)) {
+    return "You will need to get this signed off by Legal."+
+    " Do you still want the laws of another country to apply?"
+    jurPart(res);
   }
 }
 // Q4ab
 var jurPart = function (res) {
-  if (answers.jurPart1.includes(res)) {
+  if (answers.no.includes(res)) {
     jurisdiction = "South African law"
-  } else if (answers.jurPart2.includes(res)) {
+  } else if (answers.yes.includes(res)) {
+    return "Which country?"
     jurisdiction = res
   }
 }
@@ -103,7 +100,8 @@ var getStartDate = function (res) {
   if (answers.startDate1.includes(res)) {
     startDate = "On signature"
   } else if (answers.startDate2.includes(res)) {
-    exactDate();
+    return "What date?"
+    exactDate(date);
   }
 }
 // Q5a
@@ -138,7 +136,18 @@ var summaryInfo = function () {
 }
 
 var getVarification = function (res) {
-  if (answers.varification1.includes(res)) {
+  if (answers.yes.includes(res)) {
+    return "Thanks! I’ll email you a draft shortly."
+  } else if (answers.no.includes(res)) {
+    return "I’ll have to start again. Is that ok?"
+    startAgain(res)
+  }
+}
 
+var startAgain = function (res) {
+  if (answers.yes.includes(res)) {
+    // TODO go to Q1
+  } else if (answers.no.includes(res)) {
+    return "Sorry I couldn’t help. Please contact Legal for assistance."
   }
 }
