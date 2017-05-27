@@ -1,14 +1,14 @@
 <html>
 <head>
-  <base href="/">
   <title>Conversation Chat App</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta property="og:image" content="conversation.svg" />
   <meta property="og:title" content="Conversation Chat Simple" />
   <!--<meta property="og:description" content="Sample application that shows how to use the Conversation API to identify user intents" />-->
-  <link rel="shortcut icon" href="file:///Users/user/eecs/web_dev/ndabot/public/favicon.ico" type="image/x-icon">
-  <link rel="stylesheet" href="file:///Users/user/eecs/web_dev/ndabot/public/css/app.css">
+  <link rel="shortcut icon" href="img/icon_n.png"/>
+  <!-- <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" /> -->
+  <link rel="stylesheet" href="css/app.css" />
 </head>
 <body>
   <!--<div id="view-change-button" class="button" onclick="PayloadPanel.togglePanel(event, this)">
@@ -16,6 +16,10 @@
     <img class="option not-full" src="file:///Users/user/eecs/web_dev/ndabot/public/img/Code Button.png">
   </div>-->
   <div id="contentParent" class="responsive-columns-wrapper">
+    <div class="logo">
+      <img id="logo-img" src="img/logo.png">
+      <img src="img/linda.png">
+    </div>
     <div id="chat-column-holder" class="responsive-column content-column">
       <div class="chat-column">
         <div id="scrollingChat"></div>
@@ -23,6 +27,7 @@
           <input id="textInput" class="input responsive-column"
             placeholder="Type something" type="text"
             onkeydown="ConversationPanel.inputKeyDown(event, this)">
+          <input class="hint" type="button" value="/hint">
         </label>
       </div>
     </div>
@@ -35,11 +40,11 @@
     </div>-->
   </div>
 
-  <script src="file:///Users/user/eecs/web_dev/ndabot/public/js/common.js"></script>
-  <script src="file:///Users/user/eecs/web_dev/ndabot/public/js/api.js"></script>
-  <script src="file:///Users/user/eecs/web_dev/ndabot/public/js/logic.js"></script>
-  <script src="file:///Users/user/eecs/web_dev/ndabot/public/js/conversation.js"></script>
-  <script src="file:///Users/user/eecs/web_dev/ndabot/public/js/payload.js"></script>
-  <script src="file:///Users/user/eecs/web_dev/ndabot/public/js/global.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/logic.js"></script>
+  <script src="js/conversation.js"></script>
+  <script src="js/payload.js"></script>
+  <script src="js/global.js"></script>
 </body>
 </html>
