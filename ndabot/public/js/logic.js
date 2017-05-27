@@ -112,7 +112,7 @@ function getPurpose(res){
 
 function getDocLength(res) {
   if (this.answers.no.includes(res)) {
-    this.length = "Indefinite";
+    this.length = "indefinitely";
     this.process = this.getJurisdiction;
     return "We normally have our NDAs governed by South African law. Should this NDA be any different?"
   } else if (this.answers.yes.includes(res)) {
