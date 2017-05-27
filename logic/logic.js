@@ -21,13 +21,14 @@ var answers = {
   // ---------------------------------------- //
   lenght1 : ["No", "no", "N", "n"],
   length2 : ["Yes", "yes", "Y", "y"]
+  // ---------------------------------------- //
+  jurisdiction1 : []
 };
 
 // Q1
 var getDocType = function (res) {
   if (answers.docType1.includes(res)) {
     docType = res
-    console.log(docType);
   } else if (answers.docType2.includes(res)){
     docType = res
   } else {
@@ -37,9 +38,9 @@ var getDocType = function (res) {
 // Q1a
 var getPartyType = function (res) {
   if (answers.partyType1.includes(res)) {
-    var partyType = res
+    partyType = res
   } else if (answers.partyType2.includes(res)) {
-    var partyType = res
+    partyType = res
   } else {
     console.log("You entered wrong answer.");
   }
@@ -47,15 +48,17 @@ var getPartyType = function (res) {
 // TODO Q2
 
 // Q3
-var getDocLength =  function(res) {
+var getDocLength = function(res) {
   if (answers.lenght1.includes(res)) {
-    var lenght = "Indefinite"
+    lenght = "Indefinite"
   } else if (answers.length2.includes(res)) {
-    var lenght = res
+    lenght = res
   } else {
     console.log("You entered wrong answer.");
   }
 }
 
 // Q4
-getDocType("m");
+var getJurisdiction = function (res) {
+
+}
