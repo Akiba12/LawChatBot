@@ -1,7 +1,8 @@
 var Logic = (function(){
 return{
-    presentText:"Do you need a mutual or a one way NDA?",
-    process:getDocType,
+    presentText:"Hello and welcome! I'm LiNDA and I'll help you create your NDA agreement quickly and easily. Are you ready?",
+    process:getStarted,
+    getStarted: getStarted,
     getDocType: getDocType,
     getPartyType:getPartyType,
     getExactLength:getExactLength,
@@ -37,6 +38,19 @@ return{
 }
 
 // Q1
+
+function getStarted(res){
+  if(this.answers.yes.includes(res)){
+    this.process = this.getDocType;
+    return "Let's get started. Firstly, do you need a mutual or a one way NDA?";
+  }
+  else{
+    return "Ok, just say yes when you are!";
+  }
+}
+
+
+
 function getDocType(res) {
   var next = "Are we the party that is receiving confidential information"
   +" or the party that is sharing our confidential information?";
@@ -55,7 +69,7 @@ function getDocType(res) {
 // Q1a
 function getPartyType(res) {
   var next = "Now I need to know why you are receiving or sharing information."
-  +"Would you like some examples?"
+  +"<br>Would you like some examples?"
   if (this.answers.partyType1.includes(res)) {
     this.partyType = res
   } else if (this.answers.partyType2.includes(res)) {
@@ -76,13 +90,14 @@ function processPartyType(res) {
   this.process = getPurpose;
   if (this.answers.yes.includes(res)) {
     return "Some examples would be receiving or sharing information in relation"+
-    "to an investment, for a supply of products or services or for a joint venture.";
+    "to an investment, for a supply of products or services or for a joint venture."
+    +"<br>So why are you receiving or sharing information?";
   }else if (this.answers.no.includes(res)) {
     return "So why are you receiving or sharing information?";
   }else if (res=="help"){
     return "Some examples would be receiving or sharing information in relation"+
     "to an investment, for a supply of products or services or for a joint venture."
-    +" So why are you receiving or sharing information?"
+    +"<br>So why are you receiving or sharing information?"
   }else{
     this.process = processPartyType;
     return "You've entered an invalid response.";
@@ -93,9 +108,7 @@ function getPurpose(res){
   if(this.answers.purpose.includes(res.toLowerCase())){
     this.purpose = res.toLowerCase();
     this.process = this.getDocLength;
-    return "We normally say that confidentiality obligations should last forever. Should this NDA be any different?"
-  }else if (this.answers.no.includes(res)) {
-    return "So why are you receiving or sharing information?"; 
+    return "We normally say that confidentiality obligations should last forever. <br>Should this NDA be any different?"
   }else{
     this.process = this.getPurpose;
     return "You've entered an invalid response.";
@@ -107,7 +120,7 @@ function getDocLength(res) {
   if (this.answers.no.includes(res)) {
     this.length = "indefinitely";
     this.process = this.getJurisdiction;
-    return "We normally have our NDAs governed by South African law. Should this NDA be any different?"
+    return "We normally have our NDAs governed by South African law. <br>Should this NDA be any different?"
   } else if (this.answers.yes.includes(res)) {
     this.process = this.getExactLength;
     return "How long should the confidentiality obligations last for here?"
@@ -123,7 +136,7 @@ function getExactLength(len) {
     this.length = len;
     this.process = this.getJurisdiction;
   }
-  return "We normally have our NDAs governed by South African law. Should this NDA be any different?";
+  return "We normally have our NDAs governed by South African law. <br>Should this NDA be any different?";
 }
 
 
@@ -217,7 +230,7 @@ function summaryInfo() {
   ]
 
 
-  var summary =  "Great, thanks for that. Just to confirm, you want a <span contenteditable> {value1} </span> NDA with <span contenteditable> {value2} </span> <span contenteditable> {value3} </span> of <span contenteditable> {value4} </span> for the purpose of <span contenteditable> {value5} </span>, with confidentiality obligations that last <span contenteditable> {value6} </span> and governed by <span contenteditable> {value7} </span>. The confidentiality obligations will start on <span contenteditable> {value8} </span>. Is that all correct?"
+  var summary =  "Great, thanks for that. <br>Just to confirm, you want a <span contenteditable class='field'> {value1} </span> NDA with <span contenteditable class='field'> {value2} </span> <span contenteditable class='field'> {value3} </span> of <span contenteditable class='field'> {value4} </span> for the purpose of <span contenteditable class='field'> {value5} </span>, with confidentiality obligations that last <span contenteditable class='field'> {value6} </span> and governed by <span contenteditable class='field'> {value7} </span>. The confidentiality obligations will start on <span contenteditable class='field'> {value8} </span>. Is that all correct?"
 
   fields.forEach(function(field,i){
       summary = summary.replace('{value'+(i+1)+'}',this[field].toUpperCase());
@@ -240,7 +253,7 @@ function getVerification (res) {
 
 function startAgain(res){
   if (this.answers.yes.includes(res)) {
-    this.process = this.getDocType;
+    this.process = this.getStarted;
     return "Do you need a mutual or a one way NDA?"
   } else if (this.answers.no.includes(res)) {
     this.process = this.getVerification;

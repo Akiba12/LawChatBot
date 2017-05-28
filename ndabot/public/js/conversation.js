@@ -33,7 +33,7 @@ var ConversationPanel = (function() {
   // Set up callbacks on payload setters in Api module
   // This causes the displayMessage function to be called when messages are sent / received
   function chatUpdateSetup() {
-    displayMessage({"output":{"text":"Hello and welcome"}},'watson');
+    //displayMessage({"output":{"text":"<span class='welcome'>Hello and welcome. I'm LiNDA and I'll help you create your NDA agreement quickly and easily.</span>"}},'watson');
     displayMessage({"output":{"text":Logic.presentText}},'watson');
     previousQuestion = Logic.presentText;
     // var currentRequestPayloadSetter = Api.setRequestPayload;
@@ -162,7 +162,6 @@ var ConversationPanel = (function() {
 
   // Constructs new DOM element from a message payload
   function buildMessageDomElements(newPayload, isUser) {
-    console.log(isUser);
     var textArray = isUser ? newPayload.input.text : newPayload.output.text;
     if (Object.prototype.toString.call( textArray ) !== '[object Array]') {
       textArray = [textArray];

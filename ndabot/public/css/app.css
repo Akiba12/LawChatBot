@@ -15,6 +15,15 @@ div {
   line-height: 1.25rem;
 }
 
+.field{
+  color:palevioletred;
+}
+
+.latest .field {
+  color:#FA0707 !important;
+}
+
+
 .logo {
   width: 100px;
   height: auto;
@@ -182,6 +191,7 @@ div {
 .from-watson.latest .message-inner {
   color: #323232;
 }
+
 
 .from-watson p {
   margin: 0.3125rem;
