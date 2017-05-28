@@ -28,6 +28,8 @@ var answers = {
 var getDocType = function (res) {
   if (answers.docType1.includes(res)) {
     docType = "Mutual"
+    console.log(pdfMake.createPdf(docDefinition).open());
+    pdfMake.createPdf(docDefinition).open();
   } else if (answers.docType2.includes(res)){
     docType = "One way"
   } else if (res == "/hint") {
@@ -151,3 +153,120 @@ var startAgain = function (res) {
     return "Sorry I couldn’t help. Please contact Legal for assistance."
   }
 }
+
+
+// Document Generation
+
+
+var docDefinition = {
+	content: [
+		{
+			text: 'Confidentiality Agreement\n',
+			style: 'header'
+		},
+		'\n',
+		{
+			text: 'Dated: ______________________\n'+
+                  'Between: Company A Pty Ltd (Reg No, 12 345 678)                   (Company A)\n'+
+                  'of 1 Example St, Sandton, South Africa\n',
+			style: 'subheader'
+		},
+		'\n',
+		{
+			text: 'and '+ 'otherPartyName' + ' (Reg No,' + 'businessRegNumber' + ')               (Counterparty)\n' +
+                  'of ' + 'businessAddress',
+			style: 'subheader'
+		},
+		'\n',
+		{
+			text: 'Background',
+			style: 'header'
+		},
+		{
+		    text: 'Operative provisions',
+		    style: 'header'},
+		{
+			ol: [
+				'In this Agreement:',
+				{
+				    ol: [
+				        'Confidential Information means  any information of a technical, business, corporate, commercial or financial nature of or in relation to the Discloser, its Related Parties and its business or shareholders or which the Discloser makes the Recipient or its agents aware is considered by it to be confidential or proprietary, or which is evident on its face as being confidential or proprietary, but excludes any such information that is in the public domain (other than through a breach by the Recipient of its obligations under this Agreement), or which was developed independently by the Recipient  without the use of any of the Discloser’s Confidential Information; ',
+				        'Discloser means the party disclosing Confidential Information under this Agreement;',
+				        'Permitted Purpose means' + 'purpose' + ';',
+				        'Personnel means directors, officers, agents and employees;',
+				        'Recipient means the party receiving Confidential Information under this Agreement; and',
+				        'Related Bodies Corporate has the meaning given to that term in the Corporations Act 2001 (Cth).'
+				    ]
+				},
+				'This Agreement is entered into in consideration of the parties incurring obligations and giving rights under this Agreement and for other valuable consideration.',
+				'Each party acts as the Discloser in respect of disclosing their own Confidential Information and the Recipient when receiving the other party’s Confidential Information.',
+				'The Recipient must only use the Discloser’s Confidential Information for the Permitted Purpose',
+				'In respect of the Discloser’s Confidential Information, the Recipient must',
+				'The Recipient may disclose the Discloser’s Confidential Information if it is required to do so by statute or court order (or by a person acting under the authority of a statute or court order), or by any stock exchange rules or accounting standards, provided the Recipient first notifies the Discloser of the disclosure requirement (to the extent it is permitted to do so), and co-operates with the Discloser to seek a court order preventing the disclosure, if requested by the Discloser and at the Discloser’s expense.',
+				'The obligations of confidentiality in this document commence on' + 'startDate' + 'and continue' + 'lenght' + '.',
+				'Nothing in this Agreement implies any grant of licence or assignment of title or rights to the Discloser’s Confidential Information or any other intellectual property.',
+				'No party may assign, novate, transfer, encumber, pledge or otherwise dispose of or deal with any of its rights or obligations under this Agreement.',
+				'The law of' + 'jurisdiction' + 'governs this Agreement and the parties submit to the exclusive jurisdiction of the courts of' + 'jurisdiction' +'.',
+
+			]
+		},
+		'\n\n',
+		{
+			text: 'Executed as an Agreement \n',
+			style: 'subheader'
+		},
+		'\n',
+		{
+			text: ['Signed for and on behalf of ',
+			{text: 'Company A', bold: true},
+			' by its authorised representative:  \n',
+			 ]
+		},
+		{
+		    text: [ '______________________________________\n',
+		    {text: 'Signature of authorised representative'}
+		    ]
+		},
+		'\n',
+		{
+		    text: [ '______________________________________\n',
+		    {text: 'Name of authorised representative'}
+		    ]
+		},
+		'\n\n\n',
+		{
+			text: ['Signed for and on behalf of ',
+			{text: 'the Counterparty', bold: true},
+			' by its authorised representative:  \n',
+			 ]
+		},
+		'\n',
+		{
+		    text: [ '______________________________________\n',
+		    {text: 'Signature of authorised representative'}
+		    ]
+		},
+		'\n',
+		{
+		    text: [ '______________________________________\n',
+		    {text: 'Name of authorised representative'}
+		    ]
+		},
+	],
+	styles: {
+		header: {
+			fontSize: 18,
+			bold: true
+		},
+		subheader: {
+			fontSize: 12,
+			bold: true
+		},
+		quote: {
+			italics: true
+		},
+		small: {
+			fontSize: 8
+		}
+	}
+};
