@@ -26,8 +26,10 @@
         <label for="textInput" class="inputOutline">
           <input id="textInput" class="input responsive-column"
             placeholder="Type something" type="text"
-            onkeydown="ConversationPanel.inputKeyDown(event, this)">
-          <input class="hint" type="button" value="/hint">
+            onkeydown="ConversationPanel.inputSend(event, this)">
+          <input class="hint" type="button" value="Help"
+          onclick="ConversationPanel.inputSend(event, this)"
+          >
         </label>
       </div>
     </div>

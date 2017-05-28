@@ -16,10 +16,12 @@ var ConversationPanel = (function() {
     }
   };
 
+  var previousQuestion;
+
   // Publicly accessible methods defined
   return {
     init: init,
-    inputKeyDown: inputKeyDown
+    inputSend: inputSend
   };
 
   // Initialize the module
@@ -33,6 +35,7 @@ var ConversationPanel = (function() {
   function chatUpdateSetup() {
     displayMessage({"output":{"text":"Hello and welcome"}},'watson');
     displayMessage({"output":{"text":Logic.presentText}},'watson');
+    previousQuestion = Logic.presentText;
     // var currentRequestPayloadSetter = Api.setRequestPayload;
 
     // Api.setRequestPayload = function(newPayloadStr) {
@@ -213,38 +216,38 @@ var ConversationPanel = (function() {
 
 
   // Handles the submission of input
-  function inputKeyDown(event, inputBox) {
+  function inputSend(event, inputBox) {
     // Submit on enter key, dis-allowing blank messages
-    if (event.keyCode === 13 && inputBox.value) {
-      var message = inputBox.value
-      displayMessage({"input":{"text":message}},'user');
-      
-
-      // Retrieve the context from the previous server response
-      // var context;
-
-      // //TODO: response should come from our code
-      // var latestResponse = Api.getResponsePayload();
-      // if (latestResponse) {
-      //   context = latestResponse.context;
-      // }
-
-      // //TODO: response should come from our code
-      // // Send the user message
-      // Api.sendRequest(inputBox.value, context);
-
-      // // Clear input box for further messages
-      inputBox.value = '';
+    if ((event.keyCode === 13 && inputBox.value)
+      || (inputBox.className == 'hint'))
+     {
+      var message = inputBox.value;
+      console.log(message.toLowerCase());
+      if(inputBox.className != 'hint'){
+          displayMessage({"input":{"text":message}},'user');
+          inputBox.value = '';
+      }
 
       // Logic.presentFunction(message);
-      displayMessage({"output":{"text":Logic.process(message)}},'watson');
+      var outputMessage = Logic.process(message.toLowerCase());
+      displayMessage({"output":{"text":outputMessage}},'watson');
+      if(outputMessage == "You've entered an invalid response."){
+          displayMessage({"output":{"text":previousQuestion}},'watson');
+      }
+
+      else{
+        previousQuestion = outputMessage;
+      }
+
+
 
       // //TODO: understand what this is doing
       Common.fireEvent(inputBox, 'input');
-
-      ;
     }
   }
+
+
+
 
   function processMessage(message){
     if(message == "Hello"){

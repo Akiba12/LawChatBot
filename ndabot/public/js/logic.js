@@ -14,55 +14,37 @@ return{
     getCompanyName: getCompanyName,
     getRegNumber: getRegNumber,
     getAddress: getAddress,
+    getCountry: getCountry,
     summaryInfo: summaryInfo,
     getVerification: getVerification,
+    startAgain: startAgain,
     answers: {
     purpose: ['investment','supply of products',
     'supply of services','joint venture'],
-    docType1 : ["Mutual", "mutual", "M", "m"],
-    docType2 : ["One Way", "One way", "one way", "One", "one", "O", "o"],
-    startDate1 : ["Signature", "signature", "On signature", "on signature"],
-    startDate2 : ["Another date", "another date", "Another", "another"],
+    docType1 : ["mutual","m"],
+    docType2 : ["one way",  "one","o"],
+    startDate1 : [ "signature",  "on signature"],
+    startDate2 : ["another date", "another"],
     // ---------------------------------------- //
-    partyType1 : ["Receiving", "receiving", "R", "r"],
-    partyType2 : ["Sharing", "sharing", "S", "s"],
+    partyType1 : [ "receiving","r"],
+    partyType2 : [ "sharing", "s"],
     // ---------------------------------------- //
-    purpose1 : [],
-    purpose2 : [],
-    // ---------------------------------------- //
-    yes : ["Yes", "yes", "Y", "y"],
-    no : ["No", "no", "N", "n"],
+    yes : [ "yes", "y"],
+    no : [ "no", "n"],
     // ---------------------------------------- //
     jurisdiction1 : []
     }
 }
-
-var docType
-var partyType
-var purpose
-var length
-var jurisdiction
-var startDate
-var otherPartyName
-var businessRegNum
-var businessAddress
-
-
-
 
 // Q1
 function getDocType(res) {
   var next = "Are we the party that is receiving confidential information"
   +" or the party that is sharing our confidential information?";
   if (this.answers.docType1.includes(res)) {
-    this.docType = "Mutual"
+    this.docType = "mutual"
   } else if (this.answers.docType2.includes(res)){
-    this.docType = "One way"
-  } else if (res == "/hint") {
-      return "A mutual NDA is where both parties are sharing confidential"+
-      "information with each other. A one way agreement is where only one party "+
-      "shares confidential information with the other party."
-  } else {
+    this.docType = "one way"
+  }  else {
     return "You've entered an invalid response.";
   }
   this.process=this.getPartyType;
@@ -72,11 +54,16 @@ function getDocType(res) {
 
 // Q1a
 function getPartyType(res) {
-  var next = "Now I need to know why you are receiving or sharing information. Would you like some examples?"
+  var next = "Now I need to know why you are receiving or sharing information."
+  +"Would you like some examples?"
   if (this.answers.partyType1.includes(res)) {
     this.partyType = res
   } else if (this.answers.partyType2.includes(res)) {
-    this.partyType = res
+    this.partyType = res;
+  } else if (res == "help") {
+      return "A mutual NDA is where both parties are sharing confidential"+
+      "information with each other. A one way agreement is where only one party "+
+      "shares confidential information with the other party."
   } else {
     return "You've entered an invalid response.";
   }
@@ -89,9 +76,13 @@ function processPartyType(res) {
   this.process = getPurpose;
   if (this.answers.yes.includes(res)) {
     return "Some examples would be receiving or sharing information in relation"+
-    "to an investment, for a supply of products or services or for a joint venture. So why are you receiving or sharing information?";
+    "to an investment, for a supply of products or services or for a joint venture.";
   }else if (this.answers.no.includes(res)) {
     return "So why are you receiving or sharing information?";
+  }else if (res=="help"){
+    return "Some examples would be receiving or sharing information in relation"+
+    "to an investment, for a supply of products or services or for a joint venture."
+    +" So why are you receiving or sharing information?"
   }else{
     this.process = processPartyType;
     return "You've entered an invalid response.";
@@ -103,7 +94,9 @@ function getPurpose(res){
     this.purpose = res.toLowerCase();
     this.process = this.getDocLength;
     return "We normally say that confidentiality obligations should last forever. Should this NDA be any different?"
-  } else{
+  }else if (this.answers.no.includes(res)) {
+    return "So why are you receiving or sharing information?"; 
+  }else{
     this.process = this.getPurpose;
     return "You've entered an invalid response.";
   }
@@ -124,9 +117,12 @@ function getDocLength(res) {
 }
 
 function getExactLength(len) {
-  this.length = len;
-  //Parse to extract time as <NUMBER> <Period>
-  this.process = this.getJurisdiction;
+  var match = len.match(/\d+ (month|year)s*/);
+  if(match !== null){
+    this.length = match[0];
+    this.length = len;
+    this.process = this.getJurisdiction;
+  }
   return "We normally have our NDAs governed by South African law. Should this NDA be any different?";
 }
 
@@ -142,6 +138,9 @@ function getJurisdiction(res) {
     return "You will need to get this signed off by Legal."+
     " Do you still want the laws of another country to apply?";
   }
+  else{
+    return "You've entered an invalid response.";
+  }
 }
 
 function getOtherJur(res){
@@ -153,26 +152,42 @@ function getOtherJur(res){
     this.process = this.getCountry;
     return "Which country?";
   }
+  else{
+    return "You've entered an invalid response.";
+  }
 }
+
+function getCountry(res){
+  this.jurisdiction = res;
+  this.process = this.getStartDate;
+  return "Should the confidentiality obligations start on signature or on another date?";
+}
+
+
 
 function getStartDate(res){
   if (this.answers.startDate1.includes(res)) {
-    this.startDate = "On signature";
+    this.startDate = "signature";
     this.process = this.getCompanyName;
     return "What is the full legal name of the other party?";
   } else if (this.answers.startDate2.includes(res)) {
+    this.process = this.getExactDate;
     return "What date?"
+  }
+  else{
+    return "You've entered an invalid response.";
   }
 }
 
 function getExactDate(date){
-  //TODO: parse date properly
   this.startDate = date;
   this.process = this.getCompanyName;
   return "What is the full legal name of the other party?";
+
 }
 
 function getCompanyName(name){
+  name = name.split(' ').map(function(w){return w[0].toUpperCase()+w.slice(1)}).join(' ');
   this.otherPartyName = name;
   this.process = this.getRegNumber;
   return "What is the registration number or business number of " +
@@ -180,10 +195,15 @@ function getCompanyName(name){
 }
 
 function getRegNumber(number){
-  this.businessRegNum  = number;
-  this.process = this.getAddress;
-  return "What is the address of " +
-  this.otherPartyName + "?";
+  var match = number.match(/\d+/);
+  if(match !== null){
+    this.businessRegNum  = match[0];
+    this.process = this.getAddress;
+    return "What is the address of " +
+    this.otherPartyName + "?";
+  }else{
+    return "You've entered an invalid response.";
+  }
 }
 
 function getAddress(address) {
@@ -192,22 +212,43 @@ function getAddress(address) {
 }
 
 function summaryInfo() {
-  var summary =  "Great, thanks for that. Just to confirm, you want a "+this.docType+
-  " NDA with "+this.otherPartyName+" "+this.businessRegNum+" of "+this.businessAddress+
-  " for the purpose of "+this.purpose +", with confidentiality obligations that last "+
-  this.length+" and governed by "+this.jurisdiction+
-  ". The confidentiality obligations will start on "+this.startDate+
-  ". Is that all correct?"
+  var fields = ['docType','otherPartyName','businessRegNum','businessAddress',
+  'purpose','length','jurisdiction','startDate'
+  ]
+
+
+  var summary =  "Great, thanks for that. Just to confirm, you want a <span contenteditable> {value1} </span> NDA with <span contenteditable> {value2} </span> <span contenteditable> {value3} </span> of <span contenteditable> {value4} </span> for the purpose of <span contenteditable> {value5} </span>, with confidentiality obligations that last <span contenteditable> {value6} </span> and governed by <span contenteditable> {value7} </span>. The confidentiality obligations will start on <span contenteditable> {value8} </span>. Is that all correct?"
+
+  fields.forEach(function(field,i){
+      summary = summary.replace('{value'+(i+1)+'}',this[field].toUpperCase());
+  }.bind(this));
   this.process = getVerification;
   return summary;
 }
 
 function getVerification (res) {
   if (this.answers.yes.includes(res)) {
-    return "Thanks! I’ll email you a draft shortly."
+    this.process = this.startAgain;
+    return "Thanks! I will email you a draft shortly."
   } else if (this.answers.no.includes(res)) {
-    return "I’ll have to start again. Is that ok?"
+    this.process = this.startAgain;
+    return "I will have to start again. Is that ok?"
+  }else{
+    return "You've entered an invalid response. Please confirm whether the above summary is correct.";
   }
 }
+
+function startAgain(res){
+  if (this.answers.yes.includes(res)) {
+    this.process = this.getDocType;
+    return "Do you need a mutual or a one way NDA?"
+  } else if (this.answers.no.includes(res)) {
+    this.process = this.getVerification;
+    return "In that case please say yes to if above summary is correct."
+  }else{
+    return "You've entered an invalid response. Please confirm whether the above summary is correct.";
+  }
+}
+
 
 }());
